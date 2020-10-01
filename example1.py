@@ -33,7 +33,7 @@ eclf = EnsembleVoteClassifier(clfs=[clf1, clf2, clf3], weights=[2, 1, 1], voting
 #
 
 Xx, y = iris_data()
-X = Xx[:,[0, 1]]
+X = Xx[:,[0, 3]]
 Z = Xx[:,[1, 2]]
 
 

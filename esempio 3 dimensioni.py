@@ -35,7 +35,7 @@ plt.yticks(())
 # plot the first three PCA dimensions
 fig = plt.figure(1, figsize=(8, 6))
 ax = Axes3D(fig, elev=-150, azim=110)
-X_reduced = PCA(n_components=4).fit_transform(iris.data)
+X_reduced = PCA(n_components=3).fit_transform(iris.data)
 #arr=len(X_reduced)
 #print(X_reduced)
 
