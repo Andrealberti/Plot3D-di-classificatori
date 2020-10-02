@@ -30,21 +30,21 @@ clf1.fit(X,y)
 
 
 
-fig = plt.figure(1, figsize=(8, 6))
+fig = plt.figure(1, figsize=(10, 10))
 ax = fig.add_subplot(2, 2, 1)
 #fig = plot_decision_regions(X=X, y=y, clf=clf1, legend=2)
 fig = plot_decision_regions(X=X, y=y, clf=clf1, legend=2)
 
 #ax.set_title("logisticRegression")
 
-"""
-fig = plt.figure(1, figsize=(8, 6))
+
+fig = plt.figure(1, figsize=(10, 10))
 
 #applico la PCA ai miei dati
 irisPCA = PCA(n_components=3).fit_transform(iris.data)
 
 #ax = Axes3D(fig, elev=-150, azim=110)
-ax = fig.add_subplot(2, 2, 1, projection='3d')
+ax = fig.add_subplot(2, 2, 2, projection='3d')
 
 #faccio subplot senza pca
 ax.scatter(iris[:, 0], iris[:, 1], iris[:, 2], c=y,
@@ -52,7 +52,7 @@ ax.scatter(iris[:, 0], iris[:, 1], iris[:, 2], c=y,
 
 ax.set_title("Without PCA")
 
-ax = fig.add_subplot(2, 2, 2, projection='3d')
+ax = fig.add_subplot(2, 2, 3, projection='3d')
 
 ax.scatter(irisPCA[:, 0], irisPCA[:, 1], irisPCA[:, 2], c=y,
            cmap=plt.cm.Set1, edgecolor='k', s=40)
@@ -65,8 +65,8 @@ clf1 = LogisticRegression(random_state=0)
 X = iris[:,[0, 2]]
 clf1.fit(X,y)
 
-
-ax = fig.add_subplot(2, 2, 3, projection='3d')
+"""
+ax = fig.add_subplot(2, 2, 4, projection='3d')
 
 
 fig = plt.figure(1, figsize=(8, 6))
@@ -74,6 +74,6 @@ fig = plot_decision_regions(X=X, y=y,
                                 clf=clf1, legend=2)
 
 ax.set_title("logisticRegression")
-
 """
+
 plt.show()
