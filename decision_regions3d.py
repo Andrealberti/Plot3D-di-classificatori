@@ -11,7 +11,7 @@ from sklearn.ensemble import VotingClassifier
 
 # Loading some example data
 iris = datasets.load_iris()
-X = iris.data[:, [0, 2]]
+X = iris.data[:, :3]
 y = iris.target
 
 # Training classifiers
@@ -30,7 +30,16 @@ eclf.fit(X, y)
 # Plotting decision regions
 x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
 y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1),
+z_min, z_max = X[:, 2].min() - 1, X[:, 2].max() + 1
+
+
+xx1, yy1= np.meshgrid(np.arange(x_min, x_max, 0.1),
+                     np.arange(y_min, y_max, 0.1))
+
+xx2, yy2= np.meshgrid(np.arange(x_min, x_max, 0.1),
+                     np.arange(z_min, z_max, 0.1))
+
+xx3, yy3= np.meshgrid(np.arange(z_min, z_max, 0.1),
                      np.arange(y_min, y_max, 0.1))
 
 f, axarr = plt.subplots(2, 2, sharex='col', sharey='row', figsize=(10, 8))
@@ -40,8 +49,17 @@ for idx, clf, tt in zip(product([0, 1], [0, 1]),
                         ['Decision Tree (depth=4)', 'KNN (k=7)',
                          'Kernel SVM', 'Soft Voting']):
 
-    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
+    Z1 = clf.predict(np.c_[xx1.ravel(), yy1.ravel()])
+    Z2 = clf.predict(np.c_[xx2.ravel(), yy2.ravel()])
+    Z3 = clf.predict(np.c_[xx3.ravel(), yy3.ravel()])
+        
+    Z1 = Z1.reshape(xx1.shape)
+    Z2 = Z2.reshape(xx2.shape)
+    Z3 = Z3.reshape(xx3.shape)
+    
+    print(Z2)
+
+    Z = (Z1+Z2+Z3)/3
 
     axarr[idx[0], idx[1]].contourf(xx, yy, Z, alpha=0.4)
     axarr[idx[0], idx[1]].scatter(X[:, 0], X[:, 1], c=y,
