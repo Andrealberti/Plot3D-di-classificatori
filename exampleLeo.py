@@ -44,7 +44,7 @@ yy3, zz3= np.meshgrid(np.arange(y_min, y_max, 0.1),
                      np.arange(z_min, z_max, 0.1))
 
 
-fig = plt.figure(1, figsize=(10, 8))
+fig = plt.figure(1, figsize=(12, 12))
 
 clf1.fit(X[:,[0,1]], y)
 Z1 = clf1.predict(np.c_[xx1.ravel(), yy1.ravel()])
@@ -73,13 +73,19 @@ print(yy3.shape)
 print(zz3.shape)
 """
 
+
+
 #grafico xy 3d
 ax = fig.add_subplot(3, 2, 1, projection='3d')
-ax.contour3D(xx1, yy1, Z1, 50,cmap='binary')
+ax.contour3D(xx1, yy1, Z1, 50, cmap='binary')
 #ax.contour3D(xx2, Z2, zz2, 50, cmap='hot' )
 #ax.contour3D(Z3, yy3, zz3, 50, cmap='cool')
 
 ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, cmap=plt.cm.Set1, edgecolor='k', s=40)
+#imposto l'angolo di rotazione iniziale
+ax.view_init(105, -90)
+
+
 ax.set_title("XY")
 ax.set_xlabel("X")
 ax.w_xaxis.set_ticklabels([])
@@ -99,10 +105,11 @@ ax.set_ylabel("Y")
 #grafico xz 3d
 ax = fig.add_subplot(3, 2, 3, projection='3d')
 #ax.contour3D(xx1, yy1, Z1, 50,cmap='binary')
-#ax.contour3D(xx2, Z2, zz2, 50, cmap='hot' )
-ax.contour3D(Z3, yy3, zz3, 50, cmap='cool')
+ax.contour3D(xx2, Z2, zz2, 50,colkey=TRUE, cmap='Accent' )
+#ax.contour3D(Z3, yy3, zz3, 50, cmap='cool')
 
 ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, cmap=plt.cm.Set1, edgecolor='k', s=40)
+ax.view_init(15, -90)
 ax.set_title("XZ")
 ax.set_xlabel("X")
 ax.w_xaxis.set_ticklabels([])
@@ -125,6 +132,7 @@ ax = fig.add_subplot(3, 2, 5, projection='3d')
 ax.contour3D(Z3, yy3, zz3, 50, cmap='cool')
 
 ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, cmap=plt.cm.Set1, edgecolor='k', s=40)
+ax.view_init(195, 0)
 ax.set_title("YZ")
 ax.set_xlabel("X")
 ax.w_xaxis.set_ticklabels([])
