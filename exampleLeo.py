@@ -22,7 +22,7 @@ X = iris.data[:, :3]
 y = iris.target
 
 X = PCA(n_components=3).fit_transform(X)
-print(X.shape)
+#print(X.shape)
 
 # Training classifiers
 clf1 = DecisionTreeClassifier(max_depth=4)
@@ -35,7 +35,6 @@ z_min, z_max = X[:, 2].min() - 1, X[:, 2].max() + 1
 
 xx1, yy1 = np.meshgrid(np.arange(x_min, x_max, 0.1),
                      np.arange(y_min, y_max, 0.1))
-
 
 xx2, zz2= np.meshgrid(np.arange(x_min, x_max, 0.1),
                      np.arange(z_min, z_max, 0.1))
@@ -74,17 +73,13 @@ print(zz3.shape)
 """
 
 
-
 #grafico xy 3d
 ax = fig.add_subplot(3, 2, 1, projection='3d')
-ax.contour3D(xx1, yy1, Z1, 50, cmap='binary')
-#ax.contour3D(xx2, Z2, zz2, 50, cmap='hot' )
-#ax.contour3D(Z3, yy3, zz3, 50, cmap='cool')
+ax.contourf(xx1, yy1, Z1, 50,c=y, s=20, edgecolor='k', alpha=0.4)
 
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, cmap=plt.cm.Set1, edgecolor='k', s=40)
+ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, s=20, edgecolor='k')
 #imposto l'angolo di rotazione iniziale
 ax.view_init(105, -90)
-
 
 ax.set_title("XY")
 ax.set_xlabel("X")
@@ -104,18 +99,16 @@ ax.set_ylabel("Y")
 
 #grafico xz 3d
 ax = fig.add_subplot(3, 2, 3, projection='3d')
-#ax.contour3D(xx1, yy1, Z1, 50,cmap='binary')
-ax.contour3D(xx2, Z2, zz2, 50,colkey=TRUE, cmap='Accent' )
-#ax.contour3D(Z3, yy3, zz3, 50, cmap='cool')
+ax.contourf(xx2, zz2, Z2, 50, s=20, edgecolor='k', alpha=0.4)
 
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, cmap=plt.cm.Set1, edgecolor='k', s=40)
-ax.view_init(15, -90)
+ax.scatter(X[:, 0], X[:, 2], X[:, 1], c=y, s=20, edgecolor='k')
+ax.view_init(105, -90)
 ax.set_title("XZ")
 ax.set_xlabel("X")
 ax.w_xaxis.set_ticklabels([])
-ax.set_ylabel("Y")
+ax.set_ylabel("Z")
 ax.w_yaxis.set_ticklabels([])
-ax.set_zlabel("Z")
+ax.set_zlabel("Y")
 ax.w_zaxis.set_ticklabels([])
 
 #grafico xz 2d
@@ -127,18 +120,16 @@ ax.set_ylabel("Z")
 
 #grafico yz 3d
 ax = fig.add_subplot(3, 2, 5, projection='3d')
-#ax.contour3D(xx1, yy1, Z1, 50,cmap='binary')
-#ax.contour3D(xx2, Z2, zz2, 50, cmap='hot' )
-ax.contour3D(Z3, yy3, zz3, 50, cmap='cool')
+ax.contourf(yy3, zz3, Z3, 50, s=20, edgecolor='k', alpha=0.4)
 
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, cmap=plt.cm.Set1, edgecolor='k', s=40)
-ax.view_init(195, 0)
+ax.scatter(X[:, 1], X[:, 2], X[:, 0], c=y, s=20, edgecolor='k')
+ax.view_init(105, -90)
 ax.set_title("YZ")
-ax.set_xlabel("X")
+ax.set_xlabel("Y")
 ax.w_xaxis.set_ticklabels([])
-ax.set_ylabel("Y")
+ax.set_ylabel("Z")
 ax.w_yaxis.set_ticklabels([])
-ax.set_zlabel("Z")
+ax.set_zlabel("X")
 ax.w_zaxis.set_ticklabels([])
 
 #grafico yz 2d
