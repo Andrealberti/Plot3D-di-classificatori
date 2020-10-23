@@ -75,7 +75,7 @@ print(zz3.shape)
 
 #grafico xy 3d
 ax = fig.add_subplot(3, 2, 1, projection='3d')
-ax.contourf(xx1, yy1, Z1, 50,c=y, s=20, edgecolor='k', alpha=0.4)
+ax.contourf(xx1, yy1, Z1, 3,  s=20, edgecolor='k', alpha=0.4)
 
 ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, s=20, edgecolor='k')
 #imposto l'angolo di rotazione iniziale
