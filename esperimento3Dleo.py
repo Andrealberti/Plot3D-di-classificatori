@@ -17,6 +17,9 @@ from sklearn.ensemble import RandomForestClassifier
 
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
+from scipy.spatial import HalfspaceIntersection
+from scipy.spatial import ConvexHull
+import mpl_toolkits.mplot3d as a3
 
 
 
@@ -36,21 +39,6 @@ x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
 y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
 z_min, z_max = X[:, 2].min() - 1, X[:, 2].max() + 1
 
-lista1=np.arange(3, 6, 1)
-print("lista 1 ", lista1)
-lista2=np.arange(-3, 0, 1)
-print("lista 2 ", lista2)
-lista3=np.arange(0, 2, 1)
-print("lista 3 ", lista3)
-
-listagrid1, listagrid2, listagrid3 = np.meshgrid(lista1,lista2,lista3)
-print("lista grid1 ",listagrid1)
-print("lista grid2 ",listagrid2)
-print("lista grid3 ",listagrid3)
-print("chimamataaaaa ",listagrid1[0,2])
-print("chimamataaaaa ",listagrid2[0,2])
-print("chimamataaaaa ",listagrid3[0,2])
-
 
 xx, yy, zz = np.meshgrid(np.arange(x_min, x_max, 0.1),
                          np.arange(y_min, y_max, 0.1),
@@ -61,23 +49,89 @@ Z=clf.predict(np.c_[xx.ravel(), yy.ravel(),zz.ravel()])
 
 Z=Z.reshape(xx.shape)
 
+
+x1=xx.ravel()
+y1=yy.ravel()
+z1=zz.ravel()
+zz1=Z.ravel()
+
+
+Results=np.zeros((len(x1),4))
+print("Results shape",Results.shape)
+Results[:,0]=x1
+Results[:,1]=y1
+Results[:,2]=z1
+Results[:,3]=zz1
+
+
 print("")
+r0= [(t[0],t[1],t[2]) for t in Results if t[3]==0]
+Region0 = np.array(r0)
+hull_Region0 = ConvexHull(Region0)
+hull_facets_Region0 = hull_Region0.points[hull_Region0.simplices]
 
-fig = plt.figure(1, figsize=(12, 12))
-ax = fig.add_subplot(1, 1, 1, projection='3d')
+r1= [(t[0],t[1],t[2]) for t in Results if t[3]==1]
+Region1 = np.array(r1)
+hull_Region1 = ConvexHull(Region1)
+hull_facets_Region1 = hull_Region1.points[hull_Region1.simplices]
 
-x = np.arange(x_min, x_max, 0.1)
-y = np.arange(y_min, y_max, 0.1),
-z = np.arange(z_min, z_max, 0.1),
+r2= [(t[0],t[1],t[2]) for t in Results if t[3]==2]
+Region2 = np.array(r2)
+hull_Region2 = ConvexHull(Region2)
+hull_facets_Region2 = hull_Region2.points[hull_Region2.simplices]
+
+print(hull_Region2.simplices)
 
 
 
+fig = plt.figure()
+"""
+ax = fig.add_subplot(2, 2, 1, projection='3d')
+ax.plot_trisurf(Region0[:,0], Region0[:,1], Region0[:,2], triangles=hull_Region0.simplices, alpha=0.4,color='purple')
+ax.scatter(Region0[:,0],Region0[:,1],Region0[:,2], alpha=0.4)
+ax.set_xlim(x_min,x_max)
+ax.set_ylim(y_min,y_max)
+ax.set_zlim(z_min,z_max)
 
+ax = fig.add_subplot(2, 2, 2, projection='3d')
+ax.plot_trisurf(Region1[:,0], Region1[:,1], Region1[:,2], triangles=hull_Region1.simplices, alpha=0.4,color='blue')
+ax.scatter(Region1[:,0],Region1[:,1],Region1[:,2], alpha=0.4)
+ax.set_xlim(x_min,x_max)
+ax.set_ylim(y_min,y_max)
+ax.set_zlim(z_min,z_max)
 
-ax.scatter(xx[:10,:10,:10],yy[:10,:10,:10],zz[:10,:10,:10], alpha=0.4, c=Z[:10,:10,:10], s=20, edgecolor='k')
+ax = fig.add_subplot(2, 2, 3, projection='3d')
+ax.plot_trisurf(Region2[:,0], Region2[:,1], Region2[:,2], triangles=hull_Region2.simplices, alpha=0.4, color='yellow')
+ax.scatter(Region2[:,0],Region2[:,1],Region2[:,2], alpha=0.4)
+ax.set_xlim(x_min,x_max)
+ax.set_ylim(y_min,y_max)
+ax.set_zlim(z_min,z_max)
+"""
+ax = fig.add_subplot(1,1,1, projection='3d')
+
+ax.plot_trisurf(Region0[:,0], Region0[:,1], Region0[:,2], triangles=hull_Region0.simplices, alpha=0.3,color='purple')
+ax.plot_trisurf(Region1[:,0], Region1[:,1], Region1[:,2], triangles=hull_Region1.simplices, alpha=0.3,color='blue')
+ax.plot_trisurf(Region2[:,0], Region2[:,1], Region2[:,2], triangles=hull_Region2.simplices, alpha=0.3, color='yellow')
 ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, s=20, edgecolor='k')
-plt.show()
 
+#ax.scatter(Results[:,0],Results[:,1],Results[:,2], alpha=0.4, c=Results[:,3], s=20, edgecolor='k')
+ax.set_xlim(x_min,x_max)
+ax.set_ylim(y_min,y_max)
+ax.set_zlim(z_min,z_max)
+
+plt.show()
+"""
+fig = plt.figure(1, figsize=(12, 12))
+ax = fig.add_subplot(1, 2, 1, projection='3d')
+
+ax.scatter(xx[:,:,:],yy[:,:,:],zz[:,:,:], alpha=0.4, c=Z[:,:,:], s=20, edgecolor='k')
+
+ax = fig.add_subplot(1, 2, 2, projection='3d')
+ax.scatter(x1,y1,z1, alpha=0.4, c=zz1, s=20, edgecolor='k')
+
+#ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, s=20, edgecolor='k')
+plt.show()
+"""
 
 """
 
