@@ -27,8 +27,8 @@ clf = DecisionTreeClassifier(max_depth=4)
 clf = RandomForestClassifier(random_state=0)
 
 #dichiaro una variavile che se positiva oltre al plot 2d lo riporta in 3d, ma sempre per classificatori 2d
-DDD=False
+DDD=True
 #plotDecision2D(TrainingSet, clf, DDD)
 
 
-PlotConvexHull3D(TrainingSet,clf)
+PlotConvexHull3D(TrainingSet,clf,0.3)
