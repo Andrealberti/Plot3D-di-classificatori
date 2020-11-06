@@ -1,10 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
-
 from scipy.spatial import ConvexHull
 
+#plotDecision2D
+#Questa funzione elabora 3 griglie in 2 dimensioni, ognuna delle quali è combinazioni degli assi ossia
+# XY, XZ, YZ. Ne effettua la predizione tramite classificatore addestrato sui due specifici assi del
+#training set. Infine ne plotta i risultati dando la possibilità di portare in 3D il grafico 
 
+#input funzione
+#Training Set -> dati sul quale addestro il classificatore, essi dovranno essere divisi all'interno in data
+#                e target
+# clf -> Rappresenta il classificatore che vogliamo usare
+# DDD -> Valore booleano che ci differenzia se in uscita vogliamo solo i grafici 2D, o anche la loro trasposizione
+#        nel 3D
 
 def plotDecision2D(dataSet,clf,DDD):
 
@@ -147,9 +156,19 @@ def plotDecision2D(dataSet,clf,DDD):
     plt.show()
 
 
+#PlotConvexHull3D
+#Costruimo la funzione per plottare le regioni in 3 dimensioni seguendo il seguente schema
+#Creo una griglia cubica che racchiuda tutti i punti del training set, applico la predizione su questa griglia,
+#la divido in N regioni, dove N rappresenta il numero di etichette dato dal training set. Una volta fatto questo
+#vado a plottare le regioni prima punto per punto e poi approssimando il poligono che creano con la ConvexHull
 
-
-
+#input funzione
+#Training Set -> dati sul quale addestro il classificatore, essi dovranno essere divisi all'interno in data
+#                e target
+# clf -> Rappresenta il classificatore che vogliamo usare
+# PassoGriglia -> indica il passo che utilizzeremo per costruire la griglia di punti su cui faremo la predizione                 
+#                 ATTENZIONE: MINORE SARA', MAGGIORE SARà LO SFORZO COMPUTAZIONALE DEL CALCOLATORE 
+#                 consigliato [0,1 0,4]
 
 def PlotConvexHull3D(TrainingSet,clf,PassoGriglia):
 
@@ -162,8 +181,8 @@ def PlotConvexHull3D(TrainingSet,clf,PassoGriglia):
     X = PCA(n_components=3).fit_transform(X)
 
 
-    #creo le regioni che vorrò valutare, prendo ogni punto disponibile in una grigia di 2 o 3 dimensioni
-    #con passo da impostare (esempio 0.1), l'idea è creare un cubo che coprà in quale volume racchiuda
+    #creo le regioni che vorrò valutare, prendo ogni punto disponibile di una griglia 3 dimensioni
+    #con passo da impostare (esempio 0.1). L'idea è creare un cubo il quale volume racchiuda
     # tutto il mio training set e valutare passo per passo ogni punto appartenente a questo cubo
     #inizio prendendo gli 'estremi' del cubo
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -203,38 +222,104 @@ def PlotConvexHull3D(TrainingSet,clf,PassoGriglia):
     RegionList = []
     HullList = []
 
-    #ora che ho la lista di quali sono le possibili regioni, vado a crearle ricavandole dalla matrice 
-    #result creata 2 passi prima
-    #ciclo per ogni possibile valore trovato nelle etichette. Per ogni valore ricavo dalla matrice Result
+    #ora che ho la lista di quali sono le possibili regioni, vado a riempirle ricavandole dalla matrice 
+    #result creata 2 passi prima.
+    #Ciclo per ogni possibile valore trovato nelle etichette. Per ogni valore ricavo dalla matrice Result
     #le prime 3 colonne che corrispondono alle coordinate XYZ. Ora vado ad aggiungere alla lista RegionList
-    #un nuovo valore, esso sarà un array contente le coordinate di tutti i punti che hanno quella specifica
-    #etichetta. Infine effettuo la convexHull su questi valori cosi da ottenere il volume contenente i punti
+    #i valoti appena ricavati, racchiusi in un array contente i suddetti punti.
+    #Infine effettuo la convexHull su questi valori cosi da ottenere un volume approssimato contenente i punti
     #trovati per ogni regione.
     for i in range(len(ValoriY)):
         RegionList.append(np.array([(t[0],t[1],t[2]) for t in Results if t[3]==ValoriY[i]]))   
         HullList.append(ConvexHull(RegionList[-1])) #-1 prende l'ultimo elemento della lista
 
+    #applico lo stesso ragionamento ai dati del training set cosi da raprresentarli nelle giuste regioni
+    #li raggruppo in un array a 4 colonne e poi estraggo le coordinate di ogni punto regione per regione
+    TrainingRegion = []
+    TResult = np.c_[X, y]
+    for i in range(len(ValoriY)):
+        TrainingRegion.append(np.array([(t[0],t[1],t[2]) for t in TResult if t[3]==ValoriY[i]])) 
+
+    #ora che ho fatto le mie previsione provvedo ai plot
+    #effettuo 4 figure
+    #1) mostriamo tramite i punti del cubo le varie regioni, ognuna ha il suo grafico con anche i punti
+    #   relativi del training set appartenenti ad essa
+    #2) raggruppiamo tutte le regioni nello steso grafico
+    #3) Ripeto il ragionamento precedente ma questa volta utilizzando la tecnica calcolata prima della ConvexHull
+    #   Dobbiammo fare attenzione perchè anche se il grafico ottenuto è più limpido nella lettura si porta dietro
+    #   il concetto di convex hull ossia la nostra regione viene approssimata nel volume rappresentato
+    #   ESSO E' APPROSSIMATO QUINDI NON PRECISO. INFATTI NEL GRAFICO 4 SI POTRANNO VEDERE SOVRAPPOSIZIONI   
+    #4) Raggruppo le rappresentazioni di convexHull in un unico grafico
+
+    #seleziono la mappa dei coloti per i plot
+    jet= plt.get_cmap('jet')
 
 
-    fig = plt.figure()
+    fig = plt.figure(1)
+    #seleziono tanti colori quante sono le regioni. 
+    colors = iter(jet(np.linspace(0,(150/len(ValoriY)),150)))
+    
     #divido il plot in 2, creo Lplot per avere il numero giusto di subplot
     Lplot= int(len(ValoriY)/2) + (len(ValoriY) % 2 > 0)   #ho bisogno del valore/2 sempre preso per eccesso
+    
+    #per ogni regione rappresento i suoi punti appartententi al cubo e quelli del training set
     for i in range(len(ValoriY)):
         ax = fig.add_subplot(Lplot, 2, i+1, projection='3d')
-        ax.plot_trisurf(RegionList[i][:,0],RegionList[i][:,1],RegionList[i][:,2], triangles=HullList[i].simplices, alpha=0.4,color='purple')
-        ax.scatter(RegionList[i][:,0],RegionList[i][:,1],RegionList[i][:,2], alpha=0.4, marker="s")
+        ax.scatter(RegionList[i][:,0],RegionList[i][:,1],RegionList[i][:,2], alpha=0.015,
+                                                           marker="s",color=next(colors))
+        ax.scatter(TrainingRegion[i][:,0],TrainingRegion[i][:,1],TrainingRegion[i][:,2], color="black")
         ax.set_xlim(x_min,x_max)
         ax.set_ylim(y_min,y_max)
         ax.set_zlim(z_min,z_max)
-    plt.show()
+        plt.title("Region %s" % str(i+1))
 
-    fig = plt.figure()
+
+
+
+    fig = plt.figure(2)
+    colors = iter(jet(np.linspace(0,(150/len(ValoriY)),150)))
     ax = fig.add_subplot(1,1,1, projection='3d')
+    #raggruppo sotto lo stesso grafico tutte le regioni
     for i in range(len(ValoriY)):
-        ax.plot_trisurf(RegionList[i][:,0],RegionList[i][:,1],RegionList[i][:,2], triangles=HullList[i].simplices, alpha=0.4)
-        ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, s=20, edgecolor='k')
+        ax.scatter(RegionList[i][:,0],RegionList[i][:,1],RegionList[i][:,2], alpha=0.015, 
+                                                          marker="s",  color=next(colors))
+    ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y)
     ax.set_xlim(x_min,x_max)
     ax.set_ylim(y_min,y_max)
     ax.set_zlim(z_min,z_max)
+    plt.title("All region")
+
+    plt.show()
+
+
+    fig = plt.figure(3)
+    colors = iter(jet(np.linspace(0,(150/len(ValoriY)),150)))
+    #divido il plot in 2, creo Lplot per avere il numero giusto di subplot
+    Lplot= int(len(ValoriY)/2) + (len(ValoriY) % 2 > 0)   #ho bisogno del valore/2 sempre preso per eccesso
+    #rappresento tramite triangoli la convexHull calcolata in precedenza, ottengo un volume approssimato
+    for i in range(len(ValoriY)):
+        ax = fig.add_subplot(Lplot, 2, i+1, projection='3d')
+        ax.plot_trisurf(RegionList[i][:,0],RegionList[i][:,1],RegionList[i][:,2],
+                         triangles=HullList[i].simplices, alpha=0.4, color=next(colors))
+        ax.scatter(TrainingRegion[i][:,0],TrainingRegion[i][:,1],TrainingRegion[i][:,2], color="black")
+        ax.set_xlim(x_min,x_max)
+        ax.set_ylim(y_min,y_max)
+        ax.set_zlim(z_min,z_max)
+        plt.title("Region %s" % str(i+1))
+
+
+
+    fig = plt.figure(4)
+    colors = iter(jet(np.linspace(0,(150/len(ValoriY)),150)))
+    ax = fig.add_subplot(1,1,1, projection='3d')
+    #rappresento tutti i volumi delle regioni
+    for i in range(len(ValoriY)):
+        ax.plot_trisurf(RegionList[i][:,0],RegionList[i][:,1],RegionList[i][:,2], 
+        triangles=HullList[i].simplices, alpha=0.2,  color=next(colors))
+        ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y)
+    ax.set_xlim(x_min,x_max)
+    ax.set_ylim(y_min,y_max)
+    ax.set_zlim(z_min,z_max)
+    plt.title("All region (with volume)")
 
     plt.show()
