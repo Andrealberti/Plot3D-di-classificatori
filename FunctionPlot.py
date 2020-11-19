@@ -170,7 +170,7 @@ def plotDecision2D(dataSet,clf,DDD):
 #                 ATTENZIONE: MINORE SARA', MAGGIORE SARà LO SFORZO COMPUTAZIONALE DEL CALCOLATORE 
 #                 consigliato [0,1 0,4]
 
-def PlotConvexHull3D(TrainingSet,clf,PassoGriglia):
+def PlotDecision3D(TrainingSet,clf,PassoGriglia):
 
     #inizio dividendo il mio training set in una matrice contenente le posizioni dei punti ed un contenente
     #la loro etichetta
@@ -310,8 +310,7 @@ def PlotConvexHull3D(TrainingSet,clf,PassoGriglia):
     plt.show()
 
 
-
-def PlotConvexHull3DConvexHull(TrainingSet,clf,PassoGriglia):
+def PlotDecision3DConvexHull(TrainingSet,clf,PassoGriglia):
     
     #inizio dividendo il mio training set in una matrice contenente le posizioni dei punti ed un contenente
     #la loro etichetta
