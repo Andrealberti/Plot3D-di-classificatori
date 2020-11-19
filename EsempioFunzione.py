@@ -1,5 +1,5 @@
 import numpy as np
-from FunctionPlot import PlotConvexHull3D, plotDecision2D
+from FunctionPlot import PlotConvexHull3D, plotDecision2D, PlotConvexHull3DConvexHull
 
 from sklearn import datasets
 from sklearn.tree import DecisionTreeClassifier
@@ -17,5 +17,5 @@ clf = RandomForestClassifier(random_state=0)
 
 
 #plotDecision2D(TrainingSet, clf, True)
-
 PlotConvexHull3D(TrainingSet,clf,0.2)
+#PlotConvexHull3DConvexHull(TrainingSet,clf,0.2)
