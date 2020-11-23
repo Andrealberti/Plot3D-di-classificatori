@@ -1,6 +1,4 @@
-# ProgettoCPS
-
-Liberia di funzioni Python per il plot 3D di classificatori
+# Libreria di funzioni Python per il plot 3D di classificatori
 
 Indice delle funzioni:
 •	plotDecision2D();
