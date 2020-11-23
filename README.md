@@ -1,6 +1,6 @@
 # Libreria di funzioni Python per il plot 3D di classificatori
 
-Indice delle funzioni:
+## Indice delle funzioni:
 
 •	plotDecision2D();
 
@@ -8,9 +8,9 @@ Indice delle funzioni:
 
 •	plotDecision3DConvexHull();
 
--plotDecision2D()
+## -plotDecision2D()
 
-Input 
+### Input 
 
 •	Training Set -> dati sul quale addestro il classificatore, essi dovranno essere divisi all'interno in dat e target
 
@@ -18,19 +18,19 @@ Input
 
 •	DDD -> Valore booleano che ci differenzia se in uscita vogliamo solo i grafici 2D, o anche la loro trasposizione nel 3D
 
-Output 
+### Output 
 
 Grafici risultanti dalla classificazione
 
-Descrizione generale
+### Descrizione generale
 
 Questa funzione elabora 3 griglie in 2 dimensioni, ognuna delle quali è combinazioni degli assi ossia XY, XZ, YZ. Ne effettua la predizione tramite classificatore addestrato 
 
 sui due specifici assi del training set. Infine ne plotta i risultati dando la possibilità di portare in 3D il grafico.
 
--plotDecision3D()
+## -plotDecision3D()
 
-Input 
+### Input 
 
 •	Training Set -> dati sul quale addestro il classificatore, essi dovranno essere divisi all'interno in dat e target
 
@@ -40,11 +40,11 @@ Input
 
 COMPUTAZIONALE DEL CALCOLATORE (consigliato [0,1;0,4])
 
-Output 
+### Output 
 
 Grafici 3D risultanti dalla classificazione in cui è compresa la visualizzazione regione per regione.
 
-Descrizione generale
+### Descrizione generale
 
 Costruiamo la funzione per plottare le regioni in 3 dimensioni seguendo il seguente schema. Creo una griglia cubica che racchiuda tutti i punti del training set, applico la 
 
@@ -52,9 +52,9 @@ predizione su questa griglia, la divido in N regioni, dove N rappresenta il nume
 
 per punto.
 
--plotDecision3DConvexHull()
+## -plotDecision3DConvexHull()
 
-Input 
+### Input 
 
 •	Training Set -> dati sul quale addestro il classificatore, essi dovranno essere divisi all'interno in dat e target
 
@@ -64,11 +64,11 @@ Input
 
 COMPUTAZIONALE DEL CALCOLATORE (consigliato [0,1;0,4])
 
-Output 
+### Output 
 
 Grafici 3D risultanti dalla classificazione in cui è compresa la visualizzazione regione per regione.
 
-Descrizione generale
+### Descrizione generale
 
 Costruiamo la funzione per plottare le regioni in 3 dimensioni seguendo il seguente schema. Creo una griglia cubica che racchiuda tutti i punti del training set, applico la 
 
